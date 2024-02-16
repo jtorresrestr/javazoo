@@ -1,5 +1,6 @@
 package org.bootcamp.javazoo.service.impl;
 
+import org.springframework.stereotype.Service;
 import org.bootcamp.javazoo.dto.UserDto;
 import org.bootcamp.javazoo.dto.response.FollowersListDto;
 import org.bootcamp.javazoo.entity.Seller;
