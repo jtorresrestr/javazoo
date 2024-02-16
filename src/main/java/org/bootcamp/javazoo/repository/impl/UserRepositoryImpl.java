@@ -12,13 +12,19 @@ import java.util.List;
 public class UserRepositoryImpl implements IUserRepository {
 
     List<User> users = new ArrayList<>();
+
+    public UserRepositoryImpl() {
+        Seller seller1 = new Seller(1, "Seller 1");
+        Seller seller2 = new Seller(2, "Seller 2");
+        Seller seller3 = new Seller(3, "Seller 3");
+        User user1 = new User(1, "User 1");
+        user1.setFollowed(List.of(seller1, seller2, seller3));
+        users.add(user1);
+    }
+
     @Override
-    public List<Seller> getFollowedList(Integer userId) {
-        var user =  users.stream().filter(u -> u.getId().equals(userId)).findFirst();
-        if(user.isEmpty()) {
-            return new ArrayList<>();
-        }else {
-            return user.get().getFollowed();
-        }
+    public User getById(Integer userId) {
+        return users.stream()
+                .filter(user -> user.getId().equals(userId)).findFirst().orElse(null);
     }
 }

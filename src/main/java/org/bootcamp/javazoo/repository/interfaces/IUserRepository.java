@@ -6,5 +6,5 @@ import org.bootcamp.javazoo.entity.User;
 import java.util.List;
 
 public interface IUserRepository {
-    List<Seller> getFollowedList(Integer userId);
+    User getById(Integer userId);
 }

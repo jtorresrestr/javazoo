@@ -33,7 +33,6 @@ public class UserController {
 
     @GetMapping("/users/{userId}/followed/list")
     public ResponseEntity<?> getFollowedList(@PathVariable int userId){
-        List<SellerDto> followers = userService.getFollowedList(userId);
-        return ResponseEntity.ok(followers);
+        return ResponseEntity.ok(userService.getFollowedList(userId));
     }
 }
