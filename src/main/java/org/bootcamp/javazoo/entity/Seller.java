@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 public class Seller extends User {
     private List<User> followers = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
     public Seller(Integer id, String name) {
         super(id, name);

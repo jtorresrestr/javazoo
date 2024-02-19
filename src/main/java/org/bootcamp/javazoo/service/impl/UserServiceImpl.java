@@ -21,14 +21,27 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public FollowersListDto getFollowedList(Integer userId) {
+    public FollowersListDto getFollowedList(Integer userId, String order) {
         User user =  userRepository.getById(userId);
         if (user == null) {
             throw new NotFoundException("User not found");
         }
-        List<UserDto> sellers = user.getFollowed().stream()
-                .map(UserDto::convertUserToUserDto)
-                .toList();
+        List<UserDto> sellers;
+        if (order == null) {
+            sellers = user.getFollowed().stream()
+                    .map(UserDto::convertUserToUserDto)
+                    .toList();
+        } else if (order.equals("name_asc")) {
+            sellers = user.getFollowed().stream()
+                    .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                    .map(UserDto::convertUserToUserDto)
+                    .toList();
+        } else {
+            sellers = user.getFollowed().stream()
+                    .sorted((o1, o2) -> o2.getName().compareTo(o1.getName()))
+                    .map(UserDto::convertUserToUserDto)
+                    .toList();
+        }
 
         return new FollowersListDto(userId, user.getName(), sellers);
     }
