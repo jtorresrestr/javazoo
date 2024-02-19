@@ -21,6 +21,5 @@ public interface IPostService {
     PostsFollowedUserDto mapToPostsFollowedUserDto (List<PostResponseDto> postDtos, int userId);
 
     MessageDto addNewPost(PostDto postDto);
-
     Product convertDtoToProduct(ProductDto productDto);
 }

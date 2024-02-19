@@ -30,5 +30,4 @@ public class PostDto {
     @NotNull
     @Min(0)
     private Double price;
-
 }
