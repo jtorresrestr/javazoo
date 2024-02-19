@@ -22,7 +22,7 @@ public class UserRepositoryImpl implements IUserRepository {
         user1.setFollowed(List.of(seller1, seller2, seller3));
         users.add(user1);
         user2.setFollowed(List.of(seller3));
-        users.add((user2));
+        users.add(user2);
     }
 
     @Override
