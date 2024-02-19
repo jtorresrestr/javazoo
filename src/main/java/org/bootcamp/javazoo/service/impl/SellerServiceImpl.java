@@ -56,7 +56,8 @@ public class SellerServiceImpl implements ISellerService {
             throw new BadRequestException("The user is already following the seller.");
         }
 
-        sellerRepository.addFollow(user, seller);
+        sellerRepository.addFollower(user, seller);
+        userRepository.addFollowed(user, seller);
 
         return new MessageDto("Ok");
 

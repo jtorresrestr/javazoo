@@ -5,5 +5,5 @@ import org.bootcamp.javazoo.entity.User;
 
 public interface ISellerRepository {
     Seller findById(Integer id);
-    void addFollow(User user, Seller seller);
+    void addFollower(User user, Seller seller);
 }

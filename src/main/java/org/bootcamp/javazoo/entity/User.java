@@ -20,7 +20,4 @@ public class User {
         this.name = name;
     }
 
-    public void addFollowed(Seller seller){
-        followed.add(seller);
-    }
 }
