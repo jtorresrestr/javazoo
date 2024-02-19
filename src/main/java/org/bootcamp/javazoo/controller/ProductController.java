@@ -20,8 +20,9 @@ public class ProductController {
     }
 
     @GetMapping("/followed/{userId}/list")
-    public ResponseEntity<PostsFollowedUserDto> getPostsBySellerOfUser(@PathVariable Integer userId) {
-        return ResponseEntity.ok(postService.getPostsBySellerOfUser(userId));
+    public ResponseEntity<PostsFollowedUserDto> getPostsBySellerOfUser(@PathVariable Integer userId,
+                                                                       @RequestParam(required = false) String order) {
+        return ResponseEntity.ok(postService.getPostsBySellerOfUser(userId, order));
     }
 
     @PostMapping("/post")

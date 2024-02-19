@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.bootcamp.javazoo.dto.PostDto;
 import org.bootcamp.javazoo.dto.response.PostsFollowedUserDto;
 import org.bootcamp.javazoo.entity.Post;
+import org.bootcamp.javazoo.exception.BadRequestException;
 import org.bootcamp.javazoo.repository.interfaces.IPostRepository;
 import org.bootcamp.javazoo.service.interfaces.IPostService;
 import org.bootcamp.javazoo.service.interfaces.IProductService;
@@ -21,14 +22,7 @@ import org.bootcamp.javazoo.service.interfaces.IUserService;
 import org.bootcamp.javazoo.dto.ProductDto;
 import org.bootcamp.javazoo.entity.Product;
 
-
 import java.util.Comparator;
-import java.util.stream.Collectors;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,19 +40,27 @@ public class PostServiceImpl implements IPostService {
 
     }
 
-    @Override
-    public List<Post> getPostSorted(List<Post> postsToOrder){
-        return postsToOrder.stream()
-                .sorted(Comparator.comparing(Post::getDate))
-                .collect(Collectors.toList());
+    public List<PostResponseDto> sortPostDto(List<PostResponseDto> posts, String order){
+        if(order.equals("date_asc")){
+            return posts.stream()
+                    .sorted(Comparator.comparing(PostResponseDto::getDate))
+                    .collect(Collectors.toList());
+
+        } else if (order.equals("date_desc")) {
+            return posts.stream()
+                    .sorted(Comparator.comparing(PostResponseDto::getDate).reversed())
+                    .collect(Collectors.toList());
+        } else {
+            throw new BadRequestException("Parámetro 'order' en la ruta del endpoint es inválido");
+        }
     }
     @Override
-    public List<PostResponseDto> getPostsBySeller(int userId){
+    public List<PostResponseDto> getPostsBySeller(int userId, String order){
         List<Seller> sellers = userService.getUserFollowed(userId);
         if(sellers.isEmpty()) throw new NotFoundException("El usuario no sigue a ningun vendedor actualmente");
         return sellers.stream().flatMap(seller1 -> {
             if(!seller1.getPosts().isEmpty()){
-                List<Post> postBySeller = getPostSorted(filterPostsByWeeksAgo(2, seller1.getPosts()));
+                List<Post> postBySeller = filterPostsByWeeksAgo(2, seller1.getPosts());
                 return postBySeller.stream()
                         .map(this::mapToPostDto);
             }
@@ -66,8 +68,11 @@ public class PostServiceImpl implements IPostService {
         }).toList();
     }
     @Override
-    public PostsFollowedUserDto getPostsBySellerOfUser(int userId){
-        List<PostResponseDto> postDtos = getPostsBySeller(userId);
+    public PostsFollowedUserDto getPostsBySellerOfUser(int userId, String order){
+        List<PostResponseDto> postDtos = getPostsBySeller(userId, order);
+        if(!(order == null)){
+            postDtos = sortPostDto(postDtos, order);
+        }
         return mapToPostsFollowedUserDto(postDtos, userId);
     }
     @Override
