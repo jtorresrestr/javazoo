@@ -13,11 +13,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+    private final IPostService postService;
 
-    IPostService postService;
-
-    public ProductController(PostServiceImpl postService){
+    public ProductController(IPostService postService) {
         this.postService = postService;
+    }
+
+    @GetMapping("/followed/{userId}/list")
+    public ResponseEntity<PostsFollowedUserDto> getPostsBySellerOfUser(@PathVariable Integer userId) {
+        return ResponseEntity.ok(postService.getPostsBySellerOfUser(userId));
     }
 
     @PostMapping("/post")

@@ -8,15 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class PostDto {
     @NotNull
     @Min(0)
-    private Integer user_id;
+    private int user_id;
 
     @NotNull
     @NotBlank
@@ -27,10 +25,9 @@ public class PostDto {
     private ProductDto product;
 
     @NotNull
-    private Integer category;
+    private int category;
 
     @NotNull
     @Min(0)
-    private Double price;
-
+    private double price;
 }
