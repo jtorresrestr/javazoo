@@ -24,19 +24,39 @@ public class SellerServiceImpl implements ISellerService {
         this.userRepository = userRepository;
     }
     @Override
-    public FollowersListDto getFollowersListService(Integer userId) {
+    public FollowersListDto getFollowersListService(Integer userId, String order) {
         Seller seller = sellerRepository.findById(userId);
         if (seller == null) {
             throw new NotFoundException("Seller not found");
         }
-        List<UserDto> followers = seller.getFollowers().stream()
-                .map(UserDto::convertUserToUserDto)
-                .toList();
+        List<UserDto> followers;
+        if (order == null) {
+            followers = seller.getFollowers().stream()
+                    .map(UserDto::convertUserToUserDto)
+                    .toList();
+        } else if (order.equals("name_asc")) {
+            followers = seller.getFollowers().stream()
+                    .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
+                    .map(UserDto::convertUserToUserDto)
+                    .toList();
+        } else {
+            followers = seller.getFollowers().stream()
+                    .sorted((o1, o2) -> o2.getName().compareTo(o1.getName()))
+                    .map(UserDto::convertUserToUserDto)
+                    .toList();
+
+        }
 
         return new FollowersListDto(userId, seller.getName(), followers);
     }
 
     @Override
+    public Seller getById(int sellerId){
+        Seller seller = sellerRepository.findById(sellerId);
+        if (seller == null) throw new NotFoundException("Seller not found");
+        return seller;
+
+    }
     public MessageDto addFollow(Integer userId, Integer userToFollowId) {
         if (userId.equals(userToFollowId)) {
             throw new BadRequestException("A user cannot follow themselves.");
@@ -60,7 +80,5 @@ public class SellerServiceImpl implements ISellerService {
         userRepository.addFollowed(user, seller);
 
         return new MessageDto("Ok");
-
     }
-
 }
