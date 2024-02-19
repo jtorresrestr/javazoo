@@ -1,5 +1,6 @@
 package org.bootcamp.javazoo.service.impl;
 
+import org.bootcamp.javazoo.dto.response.CountFollowersDto;
 import org.springframework.stereotype.Service;
 import org.bootcamp.javazoo.dto.UserDto;
 import org.bootcamp.javazoo.dto.response.FollowersListDto;
@@ -30,5 +31,22 @@ public class SellerServiceImpl implements ISellerService {
                 .toList();
 
         return new FollowersListDto(userId, seller.getName(), followers);
+    }
+    @Override
+    public CountFollowersDto getFollowersListCount(Integer userId) {
+        Seller seller = sellerRepository.findById(userId);
+        if (seller == null) {
+            throw new NotFoundException("Seller not found");
+        }
+        List<UserDto> followers = seller.getFollowers().stream()
+                .map(UserDto::convertUserToUserDto)
+                .toList();
+
+        Integer followersCount = followers.size();
+
+        if(followersCount == 0){
+            return new CountFollowersDto(userId, seller.getName(), 0);
+        }
+        return new CountFollowersDto(userId, seller.getName(), followersCount);
     }
 }

@@ -2,7 +2,6 @@ package org.bootcamp.javazoo.controller;
 
 import org.bootcamp.javazoo.dto.response.CountFollowersDto;
 import org.bootcamp.javazoo.dto.response.FollowersListDto;
-import org.bootcamp.javazoo.service.interfaces.ICountService;
 import org.bootcamp.javazoo.service.interfaces.ISellerService;
 import org.bootcamp.javazoo.service.interfaces.IUserService;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +17,14 @@ public class UserController {
 
     private final IUserService userService;
     private final ISellerService sellerService;
-    private final ICountService followersCount;
+    private final ISellerService followersCount;
 
-    public UserController(IUserService userService, ISellerService sellerService, ICountService followersCount) {
+    public UserController(IUserService userService, ISellerService sellerService, ISellerService followersCount) {
         this.userService = userService;
         this.sellerService = sellerService;
         this.followersCount = followersCount;
     }
+
     @GetMapping("/{userId}/followers/list")
     public ResponseEntity<FollowersListDto> getFollowersList(@PathVariable Integer userId) {
         return ResponseEntity.ok(sellerService.getFollowersListService(userId));
