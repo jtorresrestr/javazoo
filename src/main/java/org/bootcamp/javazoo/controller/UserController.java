@@ -21,13 +21,13 @@ public class UserController {
         this.sellerService = sellerService;
     }
     @GetMapping("/{userId}/followers/list")
-    public ResponseEntity<FollowersListDto> getFollowersList(@PathVariable Integer userId) {
-        return ResponseEntity.ok(sellerService.getFollowersListService(userId));
+    public ResponseEntity<FollowersListDto> getFollowersList(@PathVariable Integer userId, @RequestParam(required = false) String order) {
+        return ResponseEntity.ok(sellerService.getFollowersListService(userId, order));
     }
 
-    @GetMapping("/users/{userId}/followed/list")
-    public ResponseEntity<?> getFollowedList(@PathVariable int userId){
-        return ResponseEntity.ok(userService.getFollowedList(userId));
+    @GetMapping("/{userId}/followed/list")
+    public ResponseEntity<?> getFollowedList(@PathVariable int userId, @RequestParam(required = false) String order){
+        return ResponseEntity.ok(userService.getFollowedList(userId, order));
     }
 
     @PostMapping("/{userId}/follow/{userIdToFollow}")

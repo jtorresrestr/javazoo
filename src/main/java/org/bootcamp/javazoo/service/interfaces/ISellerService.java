@@ -4,6 +4,6 @@ import org.bootcamp.javazoo.dto.response.FollowersListDto;
 import org.bootcamp.javazoo.dto.response.MessageDto;
 
 public interface ISellerService {
-    FollowersListDto getFollowersListService(Integer userId);
+    FollowersListDto getFollowersListService(Integer userId, String order);
     MessageDto addFollow(Integer userId, Integer userToFollowId);
 }
