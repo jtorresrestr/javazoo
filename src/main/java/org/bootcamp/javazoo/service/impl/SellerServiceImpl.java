@@ -57,7 +57,6 @@ public class SellerServiceImpl implements ISellerService {
         }
 
         sellerRepository.addFollow(user, seller);
-//        userRepository.addFollowed(user, seller);
 
         return new MessageDto("Ok");
 
