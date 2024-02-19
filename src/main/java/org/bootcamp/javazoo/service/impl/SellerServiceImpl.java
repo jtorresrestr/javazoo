@@ -1,9 +1,11 @@
 package org.bootcamp.javazoo.service.impl;
 
+
 import org.bootcamp.javazoo.dto.response.MessageDto;
 import org.bootcamp.javazoo.entity.User;
 import org.bootcamp.javazoo.exception.BadRequestException;
 import org.bootcamp.javazoo.repository.interfaces.IUserRepository;
+import org.bootcamp.javazoo.dto.response.CountFollowersDto;
 import org.springframework.stereotype.Service;
 import org.bootcamp.javazoo.dto.UserDto;
 import org.bootcamp.javazoo.dto.response.FollowersListDto;
@@ -51,11 +53,28 @@ public class SellerServiceImpl implements ISellerService {
     }
 
     @Override
+    public CountFollowersDto getFollowersListCount(Integer userId) {
+        Seller seller = sellerRepository.findById(userId);
+        if (seller == null) {
+            throw new NotFoundException("Seller not found");
+        }
+        List<UserDto> followers = seller.getFollowers().stream()
+                .map(UserDto::convertUserToUserDto)
+                .toList();
+
+        Integer followersCount = followers.size();
+
+        if (followersCount == 0) {
+            return new CountFollowersDto(userId, seller.getName(), 0);
+        }
+        return new CountFollowersDto(userId, seller.getName(), followersCount);
+    }
+
+    @Override
     public Seller getById(int sellerId){
         Seller seller = sellerRepository.findById(sellerId);
         if (seller == null) throw new NotFoundException("Seller not found");
         return seller;
-
     }
     public MessageDto addFollow(Integer userId, Integer userToFollowId) {
         if (userId.equals(userToFollowId)) {
@@ -63,7 +82,7 @@ public class SellerServiceImpl implements ISellerService {
         }
         User user = userRepository.getById(userId);
         Seller seller = sellerRepository.findById(userToFollowId);
-        if(user == null) {
+        if (user == null) {
             throw new NotFoundException("User not found");
         }
         if (seller == null) {
