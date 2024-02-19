@@ -22,8 +22,8 @@ public class SellerRepositoryImpl implements ISellerRepository {
         Seller seller1 = new Seller(1, "Seller 1");
         Seller seller2 = new Seller(2, "Seller 2");
         Seller seller3 = new Seller(3, "Seller 3");
-        User user1 = new User(1, "User 1");
-        user1.setFollowed(List.of(seller1, seller2, seller3));
+        User user1 = new User(5, "User 1");
+        User user2 = new User(7, "User 7");
 
         Post post1 = new Post(1, seller1, LocalDate.now(), product1, 1, 500.0);
         Post post2 = new Post(2, seller2, LocalDate.now().minusDays(5), product2, 2, 300.0);
@@ -35,7 +35,13 @@ public class SellerRepositoryImpl implements ISellerRepository {
 
         seller1.getFollowers().add(user1);
         seller2.getFollowers().add(user1);
+        seller2.getFollowers().add(user2);
         seller3.getFollowers().add(user1);
+
+        user2.getFollowed().add(seller1);
+        user2.getFollowed().add(seller2);
+        user1.getFollowed().add(seller1);
+        user1.getFollowed().add(seller2);
 
         sellers.add(seller1);
         sellers.add(seller2);
@@ -46,4 +52,12 @@ public class SellerRepositoryImpl implements ISellerRepository {
     public Seller findById(Integer id) {
         return sellers.stream().filter(seller -> seller.getId().equals(id)).findFirst().orElse(null);
     }
+
+    @Override
+    public void addFollower(User user, Seller seller) {
+        List<User> updatedFollowers = new ArrayList<>(seller.getFollowers());
+        updatedFollowers.add(user);
+        seller.setFollowers(updatedFollowers);
+    }
+
 }

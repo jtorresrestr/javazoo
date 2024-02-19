@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface IUserRepository {
     User getById(Integer userId);
+    void addFollowed(User user, Seller seller);
 }

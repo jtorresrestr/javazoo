@@ -8,9 +8,9 @@ import org.bootcamp.javazoo.entity.User;
 import java.util.List;
 
 public interface IUserService {
-    FollowersListDto getFollowedList(Integer userId);
 
     User getUserById(Integer userId);
 
     List<Seller> getUserFollowed(Integer userId);
+    FollowersListDto getFollowedList(Integer userId, String order);
 }

@@ -8,6 +8,7 @@ import org.bootcamp.javazoo.exception.NotFoundException;
 import org.bootcamp.javazoo.repository.interfaces.IPostRepository;
 import org.bootcamp.javazoo.service.interfaces.IPostService;
 import org.bootcamp.javazoo.service.interfaces.IProductService;
+import org.bootcamp.javazoo.service.interfaces.ISellerService;
 import org.bootcamp.javazoo.service.interfaces.IUserService;
 import org.springframework.stereotype.Service;
 import org.bootcamp.javazoo.dto.MessageDTO;
@@ -26,11 +27,13 @@ public class PostServiceImpl implements IPostService {
     IUserService userService;
     IPostRepository postRepository;
     IProductService productService;
+    ISellerService sellerService;
 
-    public PostServiceImpl(IUserService userService, IPostRepository postRepository, IProductService productService) {
+    public PostServiceImpl(IUserService userService, IPostRepository postRepository, IProductService productService, ISellerService sellerService) {
         this.userService = userService;
         this.postRepository = postRepository;
         this.productService = productService;
+        this.sellerService = sellerService;
 
     }
 
@@ -86,11 +89,11 @@ public class PostServiceImpl implements IPostService {
         }
     }
     private Post convertDtoToPost(PostDto postDto){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate datetimnkls = LocalDate.parse(postDto.getDate(), formatter);
         return new Post(
                 postDto.getPost_id(),
-                (Seller)userService.getUserById(postDto.getUser_id()),
+                sellerService.getById(postDto.getUser_id()),
                 LocalDate.parse(postDto.getDate(), formatter),
                 convertDtoToProduct(postDto.getProduct()),
                 postDto.getCategory(),
