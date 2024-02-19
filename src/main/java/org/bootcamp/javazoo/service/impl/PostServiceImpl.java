@@ -1,20 +1,29 @@
 package org.bootcamp.javazoo.service.impl;
 
+import org.bootcamp.javazoo.dto.PostResponseDto;
+import org.bootcamp.javazoo.dto.response.MessageDto;
+import org.bootcamp.javazoo.entity.Seller;
+import org.bootcamp.javazoo.exception.NotFoundException;
+import org.bootcamp.javazoo.service.interfaces.ISellerService;
+import org.springframework.stereotype.Service;
 import org.bootcamp.javazoo.dto.PostDto;
 import org.bootcamp.javazoo.dto.response.PostsFollowedUserDto;
 import org.bootcamp.javazoo.entity.Post;
-import org.bootcamp.javazoo.entity.Seller;
-import org.bootcamp.javazoo.exception.NotFoundException;
 import org.bootcamp.javazoo.repository.interfaces.IPostRepository;
 import org.bootcamp.javazoo.service.interfaces.IPostService;
 import org.bootcamp.javazoo.service.interfaces.IProductService;
-import org.bootcamp.javazoo.service.interfaces.ISellerService;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import org.bootcamp.javazoo.service.interfaces.IUserService;
-import org.springframework.stereotype.Service;
-import org.bootcamp.javazoo.dto.MessageDTO;
 import org.bootcamp.javazoo.dto.ProductDto;
 import org.bootcamp.javazoo.entity.Product;
 
+
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -44,7 +53,7 @@ public class PostServiceImpl implements IPostService {
                 .collect(Collectors.toList());
     }
     @Override
-    public List<PostDto> getPostsBySeller(int userId){
+    public List<PostResponseDto> getPostsBySeller(int userId){
         List<Seller> sellers = userService.getUserFollowed(userId);
         if(sellers.isEmpty()) throw new NotFoundException("El usuario no sigue a ningun vendedor actualmente");
         return sellers.stream().flatMap(seller1 -> {
@@ -55,12 +64,12 @@ public class PostServiceImpl implements IPostService {
     }
     @Override
     public PostsFollowedUserDto getPostsBySellerOfUser(int userId){
-        List<PostDto> postDtos = getPostsBySeller(userId);
+        List<PostResponseDto> postDtos = getPostsBySeller(userId);
         return mapToPostsFollowedUserDto(postDtos, userId);
     }
     @Override
-    public PostDto mapToPostDto(Post postToMap){
-        return new PostDto(
+    public PostResponseDto mapToPostDto(Post postToMap){
+        return new PostResponseDto(
                 postToMap.getSeller().getId(),
                 postToMap.getId(),
                 postToMap.getDate().toString(),
@@ -69,7 +78,7 @@ public class PostServiceImpl implements IPostService {
                 postToMap.getPrice());
     }
     @Override
-    public PostsFollowedUserDto mapToPostsFollowedUserDto(List<PostDto> postDtos, int userId){
+    public PostsFollowedUserDto mapToPostsFollowedUserDto(List<PostResponseDto> postDtos, int userId){
         return new PostsFollowedUserDto(userId, postDtos);
     }
 
@@ -80,25 +89,34 @@ public class PostServiceImpl implements IPostService {
                 .collect(Collectors.toList());
     }
     @Override
-    public MessageDTO addNewPost(PostDto postDto) {
-        try{
-            postRepository.addNewPost(convertDtoToPost(postDto));
-            return new MessageDTO("La publicación se creo exitosamente");
-        }catch (RuntimeException e){
-            throw new RuntimeException(e + "No se pudo realizar la petición");
+    public MessageDto addNewPost(PostDto postDto) {
+        Seller seller = sellerService.getById(postDto.getUser_id());
+        if(seller == null) {
+            throw new NotFoundException("Seller not found");
         }
+
+        Post post = convertDtoToPost(postDto);
+        postRepository.addNewPost(post);
+        List<Post> postList = seller.getPosts();
+        postList.add(post);
+        seller.setPosts(postList);
+        return new MessageDto("The publication was created successfully");
     }
     private Post convertDtoToPost(PostDto postDto){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate datetimnkls = LocalDate.parse(postDto.getDate(), formatter);
         return new Post(
-                postDto.getPost_id(),
+                postDto.getUser_id(),
                 sellerService.getById(postDto.getUser_id()),
                 LocalDate.parse(postDto.getDate(), formatter),
                 convertDtoToProduct(postDto.getProduct()),
                 postDto.getCategory(),
                 postDto.getPrice()
         );
+    }
+
+    private static LocalDate getDateFormat(String date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return LocalDate.parse(date, formatter);
     }
     @Override
     public Product convertDtoToProduct(ProductDto productDto) {
