@@ -44,9 +44,7 @@ public class SellerRepositoryImpl implements ISellerRepository {
         user1.getFollowed().add(seller2);
 
         sellers.add(seller1);
-
         sellers.add(seller2);
-
         sellers.add(seller3);
 
     }
