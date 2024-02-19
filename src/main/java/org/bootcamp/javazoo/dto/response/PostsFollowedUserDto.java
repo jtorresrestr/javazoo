@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bootcamp.javazoo.dto.PostDto;
+import org.bootcamp.javazoo.dto.PostResponseDto;
 
 import java.util.List;
 @AllArgsConstructor
@@ -11,6 +12,6 @@ import java.util.List;
 @Data
 public class PostsFollowedUserDto {
     private int userId;
-    private List<PostDto> posts;
+    private List<PostResponseDto> posts;
 
 }
