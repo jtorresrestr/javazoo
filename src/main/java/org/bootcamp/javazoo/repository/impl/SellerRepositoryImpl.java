@@ -19,6 +19,9 @@ public class SellerRepositoryImpl implements ISellerRepository {
         Seller seller1 = new Seller(1, "Seller 1");
         seller1.setFollowers(List.of(user1, user2, user3));
         sellers.add(seller1);
+        Seller seller3 = new Seller(3, "Seller 3");
+        seller3.setFollowers(List.of(user1, user2));
+        sellers.add(seller3);
 
     }
     @Override
