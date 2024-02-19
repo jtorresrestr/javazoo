@@ -18,8 +18,13 @@ public class UserRepositoryImpl implements IUserRepository {
         Seller seller2 = new Seller(2, "Seller 2");
         Seller seller3 = new Seller(3, "Seller 3");
         User user1 = new User(1, "User 1");
-        user1.setFollowed(List.of(seller1, seller2, seller3));
+        User user2 = new User(7, "User 7");
+        user1.addFollowed(seller1);
+        user1.addFollowed(seller2);
+        user1.addFollowed(seller3);
         users.add(user1);
+        user2.addFollowed(seller3);
+        users.add((user2));
     }
 
     @Override
@@ -27,4 +32,5 @@ public class UserRepositoryImpl implements IUserRepository {
         return users.stream()
                 .filter(user -> user.getId().equals(userId)).findFirst().orElse(null);
     }
+
 }

@@ -15,6 +15,9 @@ public class Seller extends User {
     public Seller(Integer id, String name) {
         super(id, name);
     }
+    public void addFollower(User user) {
+        followers.add(user);
+    }
 }
 
 

@@ -17,7 +17,9 @@ public class SellerRepositoryImpl implements ISellerRepository {
         User user2 = new User(2, "User 2");
         User user3 = new User(3, "User 3");
         Seller seller1 = new Seller(1, "Seller 1");
-        seller1.setFollowers(List.of(user1, user2, user3));
+        seller1.addFollower(user1);
+        seller1.addFollower(user2);
+        seller1.addFollower(user3);
         sellers.add(seller1);
 
     }
@@ -25,4 +27,11 @@ public class SellerRepositoryImpl implements ISellerRepository {
     public Seller findById(Integer id) {
         return sellers.stream().filter(seller -> seller.getId().equals(id)).findFirst().orElse(null);
     }
+
+    @Override
+    public void addFollow(User user, Seller seller) {
+        seller.addFollower(user);
+        user.addFollowed(seller);
+    }
+
 }
