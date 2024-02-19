@@ -1,0 +1,16 @@
+package org.bootcamp.javazoo.dto.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.bootcamp.javazoo.dto.PostDto;
+
+import java.util.List;
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class PostsFollowedUserDto {
+    private int userId;
+    private List<PostDto> posts;
+
+}

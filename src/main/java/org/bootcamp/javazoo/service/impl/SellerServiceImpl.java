@@ -51,6 +51,12 @@ public class SellerServiceImpl implements ISellerService {
     }
 
     @Override
+    public Seller getById(int sellerId){
+        Seller seller = sellerRepository.findById(sellerId);
+        if (seller == null) throw new NotFoundException("Seller not found");
+        return seller;
+
+    }
     public MessageDto addFollow(Integer userId, Integer userToFollowId) {
         if (userId.equals(userToFollowId)) {
             throw new BadRequestException("A user cannot follow themselves.");
@@ -74,7 +80,5 @@ public class SellerServiceImpl implements ISellerService {
         userRepository.addFollowed(user, seller);
 
         return new MessageDto("Ok");
-
     }
-
 }
