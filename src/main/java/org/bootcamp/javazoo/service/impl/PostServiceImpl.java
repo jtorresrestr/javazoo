@@ -48,9 +48,12 @@ public class PostServiceImpl implements IPostService {
         List<Seller> sellers = userService.getUserFollowed(userId);
         if(sellers.isEmpty()) throw new NotFoundException("El usuario no sigue a ningun vendedor actualmente");
         return sellers.stream().flatMap(seller1 -> {
-            List<Post> postBySeller = getPostSorted(filterPostsByWeeksAgo(2, seller1.getPosts()));
-            return postBySeller.stream()
-                    .map(this::mapToPostDto);
+            if(!seller1.getPosts().isEmpty()){
+                List<Post> postBySeller = getPostSorted(filterPostsByWeeksAgo(2, seller1.getPosts()));
+                return postBySeller.stream()
+                        .map(this::mapToPostDto);
+            }
+            return null;
         }).toList();
     }
     @Override
@@ -90,7 +93,6 @@ public class PostServiceImpl implements IPostService {
     }
     private Post convertDtoToPost(PostDto postDto){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate datetimnkls = LocalDate.parse(postDto.getDate(), formatter);
         return new Post(
                 postDto.getPost_id(),
                 sellerService.getById(postDto.getUser_id()),
