@@ -6,5 +6,5 @@ import org.bootcamp.javazoo.dto.response.FollowersListDto;
 import java.util.List;
 
 public interface IUserService {
-    FollowersListDto getFollowedList(Integer userId);
+    FollowersListDto getFollowedList(Integer userId, String order);
 }
