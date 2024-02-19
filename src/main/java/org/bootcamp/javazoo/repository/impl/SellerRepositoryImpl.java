@@ -25,9 +25,9 @@ public class SellerRepositoryImpl implements ISellerRepository {
         User user1 = new User(1, "User 1");
         user1.setFollowed(List.of(seller1, seller2, seller3));
 
-        Post post1 = new Post(1, seller1, LocalDate.now(), 1, 500.0, product1);
-        Post post2 = new Post(2, seller2, LocalDate.now().minusDays(5), 2, 300.0, product2);
-        Post post3 = new Post(3, seller1, LocalDate.now().minusWeeks(2), 1, 250.0, product1);
+        Post post1 = new Post(1, seller1, LocalDate.now(), product1, 1, 500.0);
+        Post post2 = new Post(2, seller2, LocalDate.now().minusDays(5), product2, 2, 300.0);
+        Post post3 = new Post(3, seller1, LocalDate.now().minusWeeks(2), product1, 1, 250.0);
 
         seller1.getPosts().add(post1);
         seller2.getPosts().add(post2);
