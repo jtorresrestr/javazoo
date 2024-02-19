@@ -11,10 +11,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class PostDto {
+public class PostResponseDto {
     @NotNull
     @Min(0)
     private Integer user_id;
+
+    @NotNull
+    @Min(0)
+    private Integer post_id;
 
     @NotNull
     @NotBlank
@@ -30,4 +34,5 @@ public class PostDto {
     @NotNull
     @Min(0)
     private Double price;
+
 }
