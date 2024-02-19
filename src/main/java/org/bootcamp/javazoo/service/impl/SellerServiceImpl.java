@@ -7,9 +7,7 @@ import org.bootcamp.javazoo.entity.Seller;
 import org.bootcamp.javazoo.exception.NotFoundException;
 import org.bootcamp.javazoo.repository.interfaces.ISellerRepository;
 import org.bootcamp.javazoo.service.interfaces.ISellerService;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,5 +28,13 @@ public class SellerServiceImpl implements ISellerService {
                 .toList();
 
         return new FollowersListDto(userId, seller.getName(), followers);
+    }
+
+    @Override
+    public Seller getById(int sellerId){
+        Seller seller = sellerRepository.findById(sellerId);
+        if (seller == null) throw new NotFoundException("Seller not found");
+        return seller;
+
     }
 }
