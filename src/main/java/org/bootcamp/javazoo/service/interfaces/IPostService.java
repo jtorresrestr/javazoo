@@ -11,11 +11,11 @@ import org.bootcamp.javazoo.entity.Product;
 import java.util.List;
 
 public interface IPostService {
-    List<Post> getPostSorted(List<Post> postsToOrder);
+    List<Post> getPostSorted(List<Post> postsToOrder, String order);
 
-    List<PostDto> getPostsBySeller(int userId);
+    List<PostDto> getPostsBySeller(int userId, String order);
 
-    PostsFollowedUserDto getPostsBySellerOfUser(int userId);
+    PostsFollowedUserDto getPostsBySellerOfUser(int userId, String order);
 
     PostDto mapToPostDto (Post postToMap);
 
