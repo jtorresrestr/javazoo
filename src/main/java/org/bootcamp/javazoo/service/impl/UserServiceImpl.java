@@ -53,7 +53,7 @@ public class UserServiceImpl implements IUserService {
                     .map(Mapper::convertUserToUserDto)
                     .toList();
         } else {
-            throw new BadRequestException("Parámetro 'order' en la ruta del endpoint es inválido");
+            throw new BadRequestException("'order' parameter in endpoint path is invalid");
         }
 
         return new FollowersListDto(userId, user.getName(), sellers);
@@ -87,7 +87,7 @@ public class UserServiceImpl implements IUserService {
     public List<Seller> getUserFollowed(Integer userId){
         User user = getUserById(userId);
         List<Integer> followed = user.getFollowed();
-        if(followed.isEmpty()) throw new NotFoundException("Este usuario con id: " + userId + " no sigue a ningun vendedor");
+        if(followed.isEmpty()) throw new NotFoundException("the user does not follow any seller");
         return followed.stream()
                 .map(sellerService::getById)
                 .toList();

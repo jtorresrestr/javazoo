@@ -46,13 +46,13 @@ public class PostServiceImpl implements IPostService {
                     .sorted(Comparator.comparing(PostResponseDto::getDate).reversed())
                     .collect(Collectors.toList());
         } else {
-            throw new BadRequestException("Parámetro 'order' en la ruta del endpoint es inválido");
+            throw new BadRequestException("'order' parameter in endpoint path is invalid");
         }
     }
     @Override
     public List<PostResponseDto> getPostsBySeller(int userId, String order){
         List<Seller> sellers = userService.getUserFollowed(userId);
-        if(sellers.isEmpty()) throw new NotFoundException("El usuario no sigue a ningun vendedor actualmente");
+        if(sellers.isEmpty()) throw new NotFoundException("the user does not follow any seller");
         return sellers.stream().flatMap(seller1 -> {
             if(!seller1.getPosts().isEmpty()){
                 List<Post> postBySeller = filterPostsByWeeksAgo(2, seller1.getPosts().stream().map(postRepository::getById).toList());

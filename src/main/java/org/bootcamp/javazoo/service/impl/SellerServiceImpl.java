@@ -51,7 +51,7 @@ public class SellerServiceImpl implements ISellerService {
                     .map(Mapper::convertUserToUserDto)
                     .toList();
         } else {
-            throw new BadRequestException("Parámetro 'order' en la ruta del endpoint es inválido");
+            throw new BadRequestException("'order' parameter in endpoint path is invalid");
         }
 
         return new FollowersListDto(userId, seller.getName(), followers);
