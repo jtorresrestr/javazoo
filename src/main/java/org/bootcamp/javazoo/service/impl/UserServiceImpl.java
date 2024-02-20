@@ -7,6 +7,7 @@ import org.bootcamp.javazoo.entity.Seller;
 import org.bootcamp.javazoo.entity.User;
 import org.bootcamp.javazoo.exception.BadRequestException;
 import org.bootcamp.javazoo.exception.NotFoundException;
+import org.bootcamp.javazoo.helper.Mapper;
 import org.bootcamp.javazoo.repository.interfaces.IUserRepository;
 import org.bootcamp.javazoo.service.interfaces.ISellerService;
 import org.bootcamp.javazoo.service.interfaces.IUserService;
@@ -37,19 +38,19 @@ public class UserServiceImpl implements IUserService {
         if (order == null) {
             sellers = user.getFollowed().stream()
                     .map(sellerService::getById)
-                    .map(UserDto::convertUserToUserDto)
+                    .map(Mapper::convertUserToUserDto)
                     .toList();
         } else if (order.equals("name_asc")) {
             sellers = user.getFollowed().stream()
                     .map(sellerService::getById)
                     .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
-                    .map(UserDto::convertUserToUserDto)
+                    .map(Mapper::convertUserToUserDto)
                     .toList();
         } else if (order.equals("name_desc")) {
             sellers = user.getFollowed().stream()
                     .map(sellerService::getById)
                     .sorted((o1, o2) -> o2.getName().compareTo(o1.getName()))
-                    .map(UserDto::convertUserToUserDto)
+                    .map(Mapper::convertUserToUserDto)
                     .toList();
         } else {
             throw new BadRequestException("Parámetro 'order' en la ruta del endpoint es inválido");

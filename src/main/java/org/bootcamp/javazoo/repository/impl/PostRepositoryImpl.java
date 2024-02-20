@@ -20,7 +20,7 @@ public class PostRepositoryImpl implements IPostRepository {
         Product product2 = new Product(2, "Smartphone", "Electronics", "BrandY", "Negro", "Usado");
 
         Post post1 = new Post(1, LocalDate.now(), product1, 1, 500.0);
-        Post post2 = new Post(2, LocalDate.now().minusDays(20), product2, 2, 300.0);
+        Post post2 = new Post(2, LocalDate.now().minusDays(5), product2, 2, 300.0);
         Post post3 = new Post(3, LocalDate.now().minusWeeks(2), product1, 1, 250.0);
 
         this.posts.add(post1);

@@ -4,6 +4,7 @@ package org.bootcamp.javazoo.service.impl;
 import org.bootcamp.javazoo.dto.response.MessageDto;
 import org.bootcamp.javazoo.entity.User;
 import org.bootcamp.javazoo.exception.BadRequestException;
+import org.bootcamp.javazoo.helper.Mapper;
 import org.bootcamp.javazoo.repository.interfaces.IUserRepository;
 import org.bootcamp.javazoo.dto.response.CountFollowersDto;
 import org.springframework.stereotype.Service;
@@ -35,19 +36,19 @@ public class SellerServiceImpl implements ISellerService {
         if (order == null) {
             followers = seller.getFollowers().stream()
                     .map(userRepository::getById)
-                    .map(UserDto::convertUserToUserDto)
+                    .map(Mapper::convertUserToUserDto)
                     .toList();
         } else if (order.equals("name_asc")) {
             followers = seller.getFollowers().stream()
                     .map(userRepository::getById)
                     .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
-                    .map(UserDto::convertUserToUserDto)
+                    .map(Mapper::convertUserToUserDto)
                     .toList();
         } else if (order.equals("name_desc")) {
             followers = seller.getFollowers().stream()
                     .map(userRepository::getById)
                     .sorted((o1, o2) -> o2.getName().compareTo(o1.getName()))
-                    .map(UserDto::convertUserToUserDto)
+                    .map(Mapper::convertUserToUserDto)
                     .toList();
         } else {
             throw new BadRequestException("Parámetro 'order' en la ruta del endpoint es inválido");
@@ -62,16 +63,8 @@ public class SellerServiceImpl implements ISellerService {
         if (seller == null) {
             throw new NotFoundException("Seller not found");
         }
-        List<UserDto> followers = seller.getFollowers().stream()
-                .map(userRepository::getById)
-                .map(UserDto::convertUserToUserDto)
-                .toList();
 
-        Integer followersCount = followers.size();
-
-        if (followersCount == 0) {
-            return new CountFollowersDto(userId, seller.getName(), 0);
-        }
+        int followersCount = seller.getFollowers().size();
         return new CountFollowersDto(userId, seller.getName(), followersCount);
     }
 
