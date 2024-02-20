@@ -100,4 +100,9 @@ public class SellerServiceImpl implements ISellerService {
 
         return new MessageDto("Ok");
     }
+
+    @Override
+    public void removeFollower(Seller seller) {
+        sellerRepository.removeFollower(seller);
+    }
 }

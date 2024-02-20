@@ -12,4 +12,6 @@ public interface ISellerService {
     MessageDto addFollow(Integer userId, Integer userToFollowId);
     CountFollowersDto getFollowersListCount(Integer userId);
 
+    void removeFollower (Seller seller);
+
 }

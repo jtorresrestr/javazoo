@@ -60,4 +60,10 @@ public class SellerRepositoryImpl implements ISellerRepository {
         seller.setFollowers(updatedFollowers);
     }
 
+    @Override
+    public void removeFollower(Seller seller) {
+        sellers.removeIf(s -> s.getId().equals(seller.getId()));
+        sellers.add(seller);
+    }
+
 }
