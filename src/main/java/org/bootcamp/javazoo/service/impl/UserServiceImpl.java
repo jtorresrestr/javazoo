@@ -2,6 +2,7 @@ package org.bootcamp.javazoo.service.impl;
 
 import org.bootcamp.javazoo.dto.UserDto;
 import org.bootcamp.javazoo.dto.response.FollowersListDto;
+import org.bootcamp.javazoo.dto.response.MessageDto;
 import org.bootcamp.javazoo.entity.Seller;
 import org.bootcamp.javazoo.entity.User;
 import org.bootcamp.javazoo.exception.BadRequestException;
@@ -55,16 +56,37 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public MessageDto unfollowSeller(Integer userId, Integer userIdToUnfollow) {
+
+        User user = getUserById(userId);
+        Seller seller = sellerService.getById(userIdToUnfollow);
+
+        List<Seller> followedList = user.getFollowed();
+        if(!followedList.removeIf(s -> s.equals(seller))){
+            throw  new NotFoundException("User not follow the seller");
+        }
+        user.setFollowed(followedList);
+        userRepository.unfollowSeller(user);
+
+        List<User> followerList = seller.getFollowers();
+        followerList.removeIf(u -> u.equals(user));
+        seller.setFollowers(followerList);
+        sellerService.removeFollower(seller);
+
+        return new MessageDto("You stopped following the seller");
+    }
+
+    @Override
     public User getUserById(Integer userId){
         User user = userRepository.getById(userId);
-        if(user == null) throw new NotFoundException("No existe Usuario con id: " + userId);
+        if(user == null) throw new NotFoundException("User not found");
         return user;
     }
 
     @Override
     public List<Seller> getUserFollowed(Integer userId){
-        User user = getUserById(userId);            // Obtengo el usuario por id
-        List<Seller> followed = user.getFollowed(); // Obtendo los Sellers que sigue el user
+        User user = getUserById(userId);
+        List<Seller> followed = user.getFollowed();
         if(followed.isEmpty()) throw new NotFoundException("Este usuario con id: " + userId + " no sigue a ningun vendedor");
         /* return user.getFollowed().stream()
                 .map(seller -> sellerService.getById(seller.getId()))
@@ -72,5 +94,7 @@ public class UserServiceImpl implements IUserService {
 
          */
         return followed;
+
+
     }
 }

@@ -4,12 +4,14 @@ import org.bootcamp.javazoo.entity.Post;
 import org.bootcamp.javazoo.entity.Product;
 import org.bootcamp.javazoo.entity.Seller;
 import org.bootcamp.javazoo.entity.User;
+import org.bootcamp.javazoo.exception.NotFoundException;
 import org.bootcamp.javazoo.repository.interfaces.IUserRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements IUserRepository {
@@ -59,6 +61,12 @@ public class UserRepositoryImpl implements IUserRepository {
         List<Seller> updatedFollowed = new ArrayList<>(user.getFollowed());
         updatedFollowed.add(seller);
         user.setFollowed(updatedFollowed);
+    }
+
+    @Override
+    public void unfollowSeller(User user) {
+        users.removeIf(u -> u.getId().equals(user.getId()));
+        users.add(user);
     }
 
 }
