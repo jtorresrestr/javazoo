@@ -18,10 +18,10 @@ public class Mapper {
         return new UserDto(user.getId(), user.getName());
     }
 
-    public static Post convertDtoToPost(PostDto postDto){
+    public static Post convertDtoToPost(PostDto postDto, Integer postId){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return new Post(
-                postDto.getUser_id(),
+                postId,
                 LocalDate.parse(postDto.getDate(), formatter),
                 convertDtoToProduct(postDto.getProduct()),
                 postDto.getCategory(),
