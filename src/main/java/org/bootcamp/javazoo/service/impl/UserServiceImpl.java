@@ -66,7 +66,7 @@ public class UserServiceImpl implements IUserService {
         userRepository.unfollowSeller(user);
 
         List<User> followerList = seller.getFollowers();
-        followerList.removeIf(u -> u.equals(user));
+        followerList.removeIf(u -> u.getId().equals(user.getId()));
         seller.setFollowers(followerList);
         sellerService.removeFollower(seller);
 
