@@ -1,5 +1,7 @@
 package org.bootcamp.javazoo.repository.impl;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bootcamp.javazoo.entity.Post;
 import org.bootcamp.javazoo.entity.Product;
 import org.bootcamp.javazoo.entity.Seller;
@@ -14,6 +16,9 @@ import java.time.LocalDate;
 @Repository
 public class PostRepositoryImpl implements IPostRepository {
     private List<Post> posts = new ArrayList<>();
+    @Getter
+    @Setter
+    private Integer counter = 0;
 
     public PostRepositoryImpl() {
         Product product1 = new Product(1, "Laptop", "Electronics", "BrandX", "Silver", "Buen estado");
@@ -22,6 +27,7 @@ public class PostRepositoryImpl implements IPostRepository {
         Post post1 = new Post(1, LocalDate.now(), product1, 1, 500.0);
         Post post2 = new Post(2, LocalDate.now().minusDays(5), product2, 2, 300.0);
         Post post3 = new Post(3, LocalDate.now().minusWeeks(2), product1, 1, 250.0);
+        this.setCounter(4);
 
         this.posts.add(post1);
         this.posts.add(post2);
@@ -34,6 +40,7 @@ public class PostRepositoryImpl implements IPostRepository {
     @Override
     public void addNewPost(Post post){
         posts.add(post);
+        this.setCounter(this.getCounter() + 1);
     }
 
     @Override
