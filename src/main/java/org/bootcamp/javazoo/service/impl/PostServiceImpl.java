@@ -4,6 +4,7 @@ import org.bootcamp.javazoo.dto.PostResponseDto;
 import org.bootcamp.javazoo.dto.response.MessageDto;
 import org.bootcamp.javazoo.entity.Seller;
 import org.bootcamp.javazoo.exception.NotFoundException;
+import org.bootcamp.javazoo.helper.Mapper;
 import org.bootcamp.javazoo.service.interfaces.ISellerService;
 import org.springframework.stereotype.Service;
 import org.bootcamp.javazoo.dto.PostDto;
@@ -12,15 +13,11 @@ import org.bootcamp.javazoo.entity.Post;
 import org.bootcamp.javazoo.exception.BadRequestException;
 import org.bootcamp.javazoo.repository.interfaces.IPostRepository;
 import org.bootcamp.javazoo.service.interfaces.IPostService;
-import org.bootcamp.javazoo.service.interfaces.IProductService;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.bootcamp.javazoo.service.interfaces.IUserService;
-import org.bootcamp.javazoo.dto.ProductDto;
-import org.bootcamp.javazoo.entity.Product;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -29,13 +26,11 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements IPostService {
     IUserService userService;
     IPostRepository postRepository;
-    IProductService productService;
     ISellerService sellerService;
 
-    public PostServiceImpl(IUserService userService, IPostRepository postRepository, IProductService productService, ISellerService sellerService) {
+    public PostServiceImpl(IUserService userService, IPostRepository postRepository, ISellerService sellerService) {
         this.userService = userService;
         this.postRepository = postRepository;
-        this.productService = productService;
         this.sellerService = sellerService;
 
     }
@@ -60,9 +55,9 @@ public class PostServiceImpl implements IPostService {
         if(sellers.isEmpty()) throw new NotFoundException("El usuario no sigue a ningun vendedor actualmente");
         return sellers.stream().flatMap(seller1 -> {
             if(!seller1.getPosts().isEmpty()){
-                List<Post> postBySeller = filterPostsByWeeksAgo(2, seller1.getPosts());
+                List<Post> postBySeller = filterPostsByWeeksAgo(2, seller1.getPosts().stream().map(postRepository::getById).toList());
                 return postBySeller.stream()
-                        .map(this::mapToPostDto);
+                        .map(p -> Mapper.mapToPostDto(p, seller1.getId()));
             }
             return null;
         }).toList();
@@ -73,23 +68,8 @@ public class PostServiceImpl implements IPostService {
         if(!(order == null)){
             postDtos = sortPostDto(postDtos, order);
         }
-        return mapToPostsFollowedUserDto(postDtos, userId);
+        return Mapper.mapToPostsFollowedUserDto(postDtos, userId);
     }
-    @Override
-    public PostResponseDto mapToPostDto(Post postToMap){
-        return new PostResponseDto(
-                postToMap.getSeller().getId(),
-                postToMap.getId(),
-                postToMap.getDate().toString(),
-                productService.mapToProductDto(postToMap.getProduct()),
-                postToMap.getCategory(),
-                postToMap.getPrice());
-    }
-    @Override
-    public PostsFollowedUserDto mapToPostsFollowedUserDto(List<PostResponseDto> postDtos, int userId){
-        return new PostsFollowedUserDto(userId, postDtos);
-    }
-
     public List<Post> filterPostsByWeeksAgo(int weeks, List<Post> posts){
         LocalDate weeksAgo = LocalDate.now().minusWeeks(weeks);
         return posts.stream()
@@ -103,38 +83,9 @@ public class PostServiceImpl implements IPostService {
             throw new NotFoundException("Seller not found");
         }
 
-        Post post = convertDtoToPost(postDto);
+        Post post = Mapper.convertDtoToPost(postDto);
         postRepository.addNewPost(post);
-        List<Post> postList = seller.getPosts();
-        postList.add(post);
-        seller.setPosts(postList);
+        seller.addPost(post.getId());
         return new MessageDto("The publication was created successfully");
-    }
-    private Post convertDtoToPost(PostDto postDto){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        return new Post(
-                postDto.getUser_id(),
-                sellerService.getById(postDto.getUser_id()),
-                LocalDate.parse(postDto.getDate(), formatter),
-                convertDtoToProduct(postDto.getProduct()),
-                postDto.getCategory(),
-                postDto.getPrice()
-        );
-    }
-
-    private static LocalDate getDateFormat(String date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        return LocalDate.parse(date, formatter);
-    }
-    @Override
-    public Product convertDtoToProduct(ProductDto productDto) {
-        return new Product(
-                productDto.getProduct_id(),
-                productDto.getProduct_name(),
-                productDto.getType(),
-                productDto.getBrand(),
-                productDto.getColor(),
-                productDto.getNotes()
-        );
     }
 }

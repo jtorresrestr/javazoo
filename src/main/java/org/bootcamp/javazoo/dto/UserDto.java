@@ -9,8 +9,4 @@ import org.bootcamp.javazoo.entity.User;
 public class UserDto {
     private Integer user_id;
     private String user_name;
-
-    public static UserDto convertUserToUserDto(User user) {
-        return new UserDto(user.getId(), user.getName());
-    }
 }

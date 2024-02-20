@@ -21,12 +21,10 @@ public class UserController {
 
     private final IUserService userService;
     private final ISellerService sellerService;
-    private final ISellerService followersCount;
 
-    public UserController(IUserService userService, ISellerService sellerService, ISellerService followersCount) {
+    public UserController(IUserService userService, ISellerService sellerService) {
         this.userService = userService;
         this.sellerService = sellerService;
-        this.followersCount = followersCount;
     }
     @GetMapping("/{userId}/followers/list")
     public ResponseEntity<FollowersListDto> getFollowersList(@PathVariable Integer userId, @RequestParam(required = false) String order) {
@@ -35,7 +33,7 @@ public class UserController {
     // Obtener el resultado de la cantidad de usuarios que siguen a un determinado vendedor
     @GetMapping("/{userId}/followers/count")
     public ResponseEntity<CountFollowersDto> getFollowersCount(@PathVariable Integer userId){
-        return ResponseEntity.ok(followersCount.getFollowersListCount(userId));
+        return ResponseEntity.ok(sellerService.getFollowersListCount(userId));
     }
     @GetMapping("/{userId}/followed/list")
     public ResponseEntity<?> getFollowedList(@PathVariable int userId, @RequestParam(required = false) String order){
