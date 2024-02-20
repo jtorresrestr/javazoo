@@ -15,4 +15,14 @@ public class Post {
     private Product product;
     private Integer category;
     private Double price;
+    private Boolean hasPromo;
+    private Double discount;
+
+    public Post(Integer id, LocalDate date, Product product, Integer category, Double price) {
+        this.id = id;
+        this.date = date;
+        this.product = product;
+        this.category = category;
+        this.price = price;
+    }
 }
