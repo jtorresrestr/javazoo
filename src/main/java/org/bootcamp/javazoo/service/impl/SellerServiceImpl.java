@@ -41,12 +41,13 @@ public class SellerServiceImpl implements ISellerService {
                     .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
                     .map(UserDto::convertUserToUserDto)
                     .toList();
-        } else {
+        } else if (order.equals("name_desc")) {
             followers = seller.getFollowers().stream()
                     .sorted((o1, o2) -> o2.getName().compareTo(o1.getName()))
                     .map(UserDto::convertUserToUserDto)
                     .toList();
-
+        } else {
+            throw new BadRequestException("Parámetro 'order' en la ruta del endpoint es inválido");
         }
 
         return new FollowersListDto(userId, seller.getName(), followers);

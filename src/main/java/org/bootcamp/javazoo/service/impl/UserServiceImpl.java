@@ -4,6 +4,7 @@ import org.bootcamp.javazoo.dto.UserDto;
 import org.bootcamp.javazoo.dto.response.FollowersListDto;
 import org.bootcamp.javazoo.entity.Seller;
 import org.bootcamp.javazoo.entity.User;
+import org.bootcamp.javazoo.exception.BadRequestException;
 import org.bootcamp.javazoo.exception.NotFoundException;
 import org.bootcamp.javazoo.repository.interfaces.IUserRepository;
 import org.bootcamp.javazoo.service.interfaces.ISellerService;
@@ -41,11 +42,13 @@ public class UserServiceImpl implements IUserService {
                     .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
                     .map(UserDto::convertUserToUserDto)
                     .toList();
-        } else {
+        } else if (order.equals("name_desc")) {
             sellers = user.getFollowed().stream()
                     .sorted((o1, o2) -> o2.getName().compareTo(o1.getName()))
                     .map(UserDto::convertUserToUserDto)
                     .toList();
+        } else {
+            throw new BadRequestException("Parámetro 'order' en la ruta del endpoint es inválido");
         }
 
         return new FollowersListDto(userId, user.getName(), sellers);
