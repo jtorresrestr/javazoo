@@ -13,11 +13,18 @@ import java.util.List;
 public class User {
     private Integer id;
     private String name;
-    private List<Seller> followed = new ArrayList<>();
+    private List<Integer> followed = new ArrayList<>();
 
     public User(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
 
+    public void addFollowed(Integer userId) {
+        followed.add(userId);
+    }
+
+    public void removeFollowed(Integer userId) {
+        followed.remove(userId);
+    }
 }

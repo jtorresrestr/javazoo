@@ -36,15 +36,18 @@ public class UserServiceImpl implements IUserService {
         List<UserDto> sellers;
         if (order == null) {
             sellers = user.getFollowed().stream()
+                    .map(sellerService::getById)
                     .map(UserDto::convertUserToUserDto)
                     .toList();
         } else if (order.equals("name_asc")) {
             sellers = user.getFollowed().stream()
+                    .map(sellerService::getById)
                     .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
                     .map(UserDto::convertUserToUserDto)
                     .toList();
         } else if (order.equals("name_desc")) {
             sellers = user.getFollowed().stream()
+                    .map(sellerService::getById)
                     .sorted((o1, o2) -> o2.getName().compareTo(o1.getName()))
                     .map(UserDto::convertUserToUserDto)
                     .toList();
@@ -61,17 +64,13 @@ public class UserServiceImpl implements IUserService {
         User user = getUserById(userId);
         Seller seller = sellerService.getById(userIdToUnfollow);
 
-        List<Seller> followedList = user.getFollowed();
-        if(!followedList.removeIf(s -> s.equals(seller))){
+        List<Integer> followedList = user.getFollowed();
+        if(!followedList.removeIf(s -> s.equals(userIdToUnfollow))){
             throw  new NotFoundException("User not follow the seller");
         }
-        user.setFollowed(followedList);
-        userRepository.unfollowSeller(user);
 
-        List<User> followerList = seller.getFollowers();
-        followerList.removeIf(u -> u.getId().equals(user.getId()));
-        seller.setFollowers(followerList);
-        sellerService.removeFollower(seller);
+        List<Integer> followerList = seller.getFollowers();
+        followerList.removeIf(u -> u.equals(userId));
 
         return new MessageDto("You stopped following the seller");
     }
@@ -86,15 +85,10 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<Seller> getUserFollowed(Integer userId){
         User user = getUserById(userId);
-        List<Seller> followed = user.getFollowed();
+        List<Integer> followed = user.getFollowed();
         if(followed.isEmpty()) throw new NotFoundException("Este usuario con id: " + userId + " no sigue a ningun vendedor");
-        /* return user.getFollowed().stream()
-                .map(seller -> sellerService.getById(seller.getId()))
-                .collect(Collectors.toList());
-
-         */
-        return followed;
-
-
+        return followed.stream()
+                .map(sellerService::getById)
+                .toList();
     }
 }

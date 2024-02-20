@@ -60,9 +60,9 @@ public class PostServiceImpl implements IPostService {
         if(sellers.isEmpty()) throw new NotFoundException("El usuario no sigue a ningun vendedor actualmente");
         return sellers.stream().flatMap(seller1 -> {
             if(!seller1.getPosts().isEmpty()){
-                List<Post> postBySeller = filterPostsByWeeksAgo(2, seller1.getPosts());
+                List<Post> postBySeller = filterPostsByWeeksAgo(2, seller1.getPosts().stream().map(postRepository::getById).toList());
                 return postBySeller.stream()
-                        .map(this::mapToPostDto);
+                        .map(p -> this.mapToPostDto(p, seller1.getId()));
             }
             return null;
         }).toList();
@@ -76,9 +76,9 @@ public class PostServiceImpl implements IPostService {
         return mapToPostsFollowedUserDto(postDtos, userId);
     }
     @Override
-    public PostResponseDto mapToPostDto(Post postToMap){
+    public PostResponseDto mapToPostDto(Post postToMap, Integer sellerId){
         return new PostResponseDto(
-                postToMap.getSeller().getId(),
+                sellerId,
                 postToMap.getId(),
                 postToMap.getDate().toString(),
                 productService.mapToProductDto(postToMap.getProduct()),
@@ -105,26 +105,18 @@ public class PostServiceImpl implements IPostService {
 
         Post post = convertDtoToPost(postDto);
         postRepository.addNewPost(post);
-        List<Post> postList = seller.getPosts();
-        postList.add(post);
-        seller.setPosts(postList);
+        seller.addPost(post.getId());
         return new MessageDto("The publication was created successfully");
     }
     private Post convertDtoToPost(PostDto postDto){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return new Post(
                 postDto.getUser_id(),
-                sellerService.getById(postDto.getUser_id()),
                 LocalDate.parse(postDto.getDate(), formatter),
                 convertDtoToProduct(postDto.getProduct()),
                 postDto.getCategory(),
                 postDto.getPrice()
         );
-    }
-
-    private static LocalDate getDateFormat(String date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        return LocalDate.parse(date, formatter);
     }
     @Override
     public Product convertDtoToProduct(ProductDto productDto) {

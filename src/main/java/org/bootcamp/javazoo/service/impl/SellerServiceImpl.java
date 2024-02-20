@@ -34,15 +34,18 @@ public class SellerServiceImpl implements ISellerService {
         List<UserDto> followers;
         if (order == null) {
             followers = seller.getFollowers().stream()
+                    .map(userRepository::getById)
                     .map(UserDto::convertUserToUserDto)
                     .toList();
         } else if (order.equals("name_asc")) {
             followers = seller.getFollowers().stream()
+                    .map(userRepository::getById)
                     .sorted((o1, o2) -> o1.getName().compareTo(o2.getName()))
                     .map(UserDto::convertUserToUserDto)
                     .toList();
         } else if (order.equals("name_desc")) {
             followers = seller.getFollowers().stream()
+                    .map(userRepository::getById)
                     .sorted((o1, o2) -> o2.getName().compareTo(o1.getName()))
                     .map(UserDto::convertUserToUserDto)
                     .toList();
@@ -60,6 +63,7 @@ public class SellerServiceImpl implements ISellerService {
             throw new NotFoundException("Seller not found");
         }
         List<UserDto> followers = seller.getFollowers().stream()
+                .map(userRepository::getById)
                 .map(UserDto::convertUserToUserDto)
                 .toList();
 
@@ -90,20 +94,17 @@ public class SellerServiceImpl implements ISellerService {
             throw new NotFoundException("Seller not found");
         }
 
-        boolean alreadyFollowing = user.getFollowed().stream().anyMatch(s -> s.getId().equals(seller.getId()));
+        boolean alreadyFollowing = user.getFollowed().stream()
+                .map(sellerRepository::findById)
+                .anyMatch(s -> s.getId().equals(seller.getId()));
 
         if (alreadyFollowing) {
             throw new BadRequestException("The user is already following the seller.");
         }
 
-        sellerRepository.addFollower(user, seller);
-        userRepository.addFollowed(user, seller);
+        seller.addFollower(userId);
+        user.addFollowed(userToFollowId);
 
         return new MessageDto("Ok");
-    }
-
-    @Override
-    public void removeFollower(Seller seller) {
-        sellerRepository.removeFollower(seller);
     }
 }

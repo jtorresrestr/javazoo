@@ -15,7 +15,7 @@ public interface IPostService {
 
     PostsFollowedUserDto getPostsBySellerOfUser(int userId, String order);
 
-    PostResponseDto mapToPostDto (Post postToMap);
+    PostResponseDto mapToPostDto (Post postToMap, Integer sellerId);
 
     PostsFollowedUserDto mapToPostsFollowedUserDto (List<PostResponseDto> postDtos, int userId);
 

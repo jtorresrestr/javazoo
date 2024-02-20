@@ -9,4 +9,5 @@ public interface IPostRepository {
 
     void addNewPost(Post post);
 
+    Post getById(Integer postId);
 }
