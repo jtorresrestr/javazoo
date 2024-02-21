@@ -2,8 +2,6 @@ package org.bootcamp.javazoo.repository.impl;
 
 import org.bootcamp.javazoo.entity.Post;
 import org.bootcamp.javazoo.entity.Product;
-import org.bootcamp.javazoo.entity.Seller;
-import org.bootcamp.javazoo.entity.User;
 
 import org.bootcamp.javazoo.repository.interfaces.IPostRepository;
 import org.springframework.stereotype.Repository;
@@ -40,4 +38,6 @@ public class PostRepositoryImpl implements IPostRepository {
     public Post getById(Integer postId){
         return posts.stream().filter(post -> post.getId().equals(postId)).findFirst().orElse(null);
     }
+
+
 }

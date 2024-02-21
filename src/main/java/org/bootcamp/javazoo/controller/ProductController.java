@@ -3,6 +3,7 @@ package org.bootcamp.javazoo.controller;
 import jakarta.validation.Valid;
 import org.bootcamp.javazoo.dto.PostDto;
 import org.bootcamp.javazoo.dto.PostPromoDto;
+import org.bootcamp.javazoo.dto.response.CountPromoDto;
 import org.bootcamp.javazoo.exception.BadRequestException;
 import org.bootcamp.javazoo.dto.response.PostsFollowedUserDto;
 import org.bootcamp.javazoo.service.interfaces.IPostService;
@@ -40,6 +41,11 @@ public class ProductController {
             throw new BadRequestException("Invalid fields");
         }
         return ResponseEntity.ok().body(postService.addNewPostPromo(postPromoDto));
+    }
+
+    @GetMapping("/promo-post/count")
+    public ResponseEntity<CountPromoDto> getCountPromoPost(@RequestParam Integer userId){
+        return ResponseEntity.ok().body(postService.getCountPromoPost(userId));
     }
 
 

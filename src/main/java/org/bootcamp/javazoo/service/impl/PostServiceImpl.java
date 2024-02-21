@@ -2,6 +2,7 @@ package org.bootcamp.javazoo.service.impl;
 
 import org.bootcamp.javazoo.dto.PostPromoDto;
 import org.bootcamp.javazoo.dto.PostResponseDto;
+import org.bootcamp.javazoo.dto.response.CountPromoDto;
 import org.bootcamp.javazoo.dto.response.MessageDto;
 import org.bootcamp.javazoo.entity.Seller;
 import org.bootcamp.javazoo.exception.NotFoundException;
@@ -16,6 +17,7 @@ import org.bootcamp.javazoo.repository.interfaces.IPostRepository;
 import org.bootcamp.javazoo.service.interfaces.IPostService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bootcamp.javazoo.service.interfaces.IUserService;
@@ -101,5 +103,12 @@ public class PostServiceImpl implements IPostService {
         seller.addPost(post.getId());
         return new MessageDto("The publication was created successfully");
     }
+
+    @Override
+    public CountPromoDto getCountPromoPost(Integer userId){
+        List<Post> postUser = new ArrayList<>();
+        return new CountPromoDto();
+    }
+
 
 }
