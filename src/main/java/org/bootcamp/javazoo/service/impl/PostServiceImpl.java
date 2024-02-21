@@ -105,9 +105,27 @@ public class PostServiceImpl implements IPostService {
 
     @Override
     public CountPromoDto getCountPromoPost(Integer userId){
-        List<Post> postUser = new ArrayList<>();
-        return new CountPromoDto();
+        List<Post> postUser = getPostsBySellerId(userId);
+        Integer countPromoPosts = (int)postUser.stream().filter(Post::isHas_promo).count();
+        return Mapper.mapToCountPromoDto(countPromoPosts, sellerService.getById(userId));
     }
+
+    @Override
+    public List<Post> getPostsBySellerId(Integer sellerId){
+        Seller seller = sellerService.getById(sellerId);
+        if(seller == null) throw new NotFoundException("Seller not found");
+        List<Integer> postIds = seller.getPosts();
+        List<Post> postList = new ArrayList<>();
+        postIds.forEach(postId -> {
+            postList.add(postRepository.getById(postId));
+        });
+        return postList;
+    }
+
+
+
+
+
 
 
 }

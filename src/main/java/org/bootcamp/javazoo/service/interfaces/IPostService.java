@@ -21,4 +21,6 @@ public interface IPostService {
     MessageDto addNewPostPromo(PostPromoDto postPromoDto);
 
     CountPromoDto getCountPromoPost(Integer userId);
+
+    List<Post> getPostsBySellerId(Integer sellerId);
 }

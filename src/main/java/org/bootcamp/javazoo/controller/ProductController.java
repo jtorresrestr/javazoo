@@ -44,8 +44,8 @@ public class ProductController {
     }
 
     @GetMapping("/promo-post/count")
-    public ResponseEntity<CountPromoDto> getCountPromoPost(@RequestParam Integer userId){
-        return ResponseEntity.ok().body(postService.getCountPromoPost(userId));
+    public ResponseEntity<CountPromoDto> getCountPromoPost(@RequestParam Integer user_id){
+        return ResponseEntity.ok().body(postService.getCountPromoPost(user_id));
     }
 
 

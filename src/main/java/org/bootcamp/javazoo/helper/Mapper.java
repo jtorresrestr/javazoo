@@ -1,9 +1,11 @@
 package org.bootcamp.javazoo.helper;
 
 import org.bootcamp.javazoo.dto.*;
+import org.bootcamp.javazoo.dto.response.CountPromoDto;
 import org.bootcamp.javazoo.dto.response.PostsFollowedUserDto;
 import org.bootcamp.javazoo.entity.Post;
 import org.bootcamp.javazoo.entity.Product;
+import org.bootcamp.javazoo.entity.Seller;
 import org.bootcamp.javazoo.entity.User;
 
 import java.time.LocalDate;
@@ -67,6 +69,10 @@ public class Mapper {
                 postPromoDto.isHas_promo(),
                 postPromoDto.getDiscount()
         );
+    }
+
+    public static CountPromoDto mapToCountPromoDto(Integer promo_count, Seller seller){
+        return new CountPromoDto(seller.getId(), seller.getName(), promo_count);
     }
 
 }
