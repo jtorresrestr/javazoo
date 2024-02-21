@@ -32,7 +32,6 @@ public class UserController {
     public ResponseEntity<FollowersListDto> getFollowersList(@PathVariable Integer userId, @RequestParam(required = false) String order) {
         return ResponseEntity.ok(sellerService.getFollowersListService(userId, order));
     }
-    // Obtener el resultado de la cantidad de usuarios que siguen a un determinado vendedor
     @GetMapping("/{userId}/followers/count")
     public ResponseEntity<CountFollowersDto> getFollowersCount(@PathVariable Integer userId){
         return ResponseEntity.ok(followersCount.getFollowersListCount(userId));
@@ -45,4 +44,5 @@ public class UserController {
     public ResponseEntity<?> addFollowSeller(@PathVariable Integer userId, @PathVariable Integer userIdToFollow) {
         return ResponseEntity.ok(sellerService.addFollow(userId, userIdToFollow));
     }
+
 }

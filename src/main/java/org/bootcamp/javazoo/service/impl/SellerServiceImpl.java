@@ -24,6 +24,7 @@ public class SellerServiceImpl implements ISellerService {
     public SellerServiceImpl(ISellerRepository sellerRepository, IUserRepository userRepository) {
         this.sellerRepository = sellerRepository;
         this.userRepository = userRepository;
+
     }
     @Override
     public FollowersListDto getFollowersListService(Integer userId, String order) {

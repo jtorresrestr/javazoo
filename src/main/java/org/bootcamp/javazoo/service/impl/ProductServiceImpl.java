@@ -26,6 +26,11 @@ public class ProductServiceImpl implements IProductService {
     public Product convertDtoToProduct(ProductDto productDto) {
         return null;
     }
+
+    @Override
+    public Product convertDtoToPostPromo(ProductDto productDto) {
+        return null;
+    }
 }
 
 

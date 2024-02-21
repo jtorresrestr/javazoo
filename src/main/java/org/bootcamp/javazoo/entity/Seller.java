@@ -12,6 +12,7 @@ import java.util.List;
 public class Seller extends User {
     private List<User> followers = new ArrayList<>();
     private List<Post> posts = new ArrayList<>();
+    private List<PostPromo> postsPromo = new ArrayList<>();
 
     public Seller(Integer id, String name) {
         super(id, name);

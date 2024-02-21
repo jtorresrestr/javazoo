@@ -6,4 +6,6 @@ import org.bootcamp.javazoo.entity.Product;
 public interface IProductService {
     ProductDto mapToProductDto (Product productToMap);
     Product convertDtoToProduct(ProductDto productDto);
+    Product convertDtoToPostPromo(ProductDto productDto);
+
 }
