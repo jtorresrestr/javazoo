@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class PostsFollowedUserDto {
-    private int userId;
+    private int user_id;
     private List<PostResponseDto> posts;
 
 }
