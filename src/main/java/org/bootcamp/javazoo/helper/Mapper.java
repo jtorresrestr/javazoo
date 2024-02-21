@@ -2,6 +2,8 @@ package org.bootcamp.javazoo.helper;
 
 import org.bootcamp.javazoo.dto.*;
 import org.bootcamp.javazoo.dto.response.CountPromoDto;
+import org.bootcamp.javazoo.dto.response.PostPromoListDto;
+import org.bootcamp.javazoo.dto.response.PostPromoResponseDto;
 import org.bootcamp.javazoo.dto.response.PostsFollowedUserDto;
 import org.bootcamp.javazoo.entity.Post;
 import org.bootcamp.javazoo.entity.Product;
@@ -74,6 +76,21 @@ public class Mapper {
 
     public static CountPromoDto mapToCountPromoDto(Integer promo_count, Seller seller){
         return new CountPromoDto(seller.getId(), seller.getName(), promo_count);
+    }
+
+    public static PostPromoResponseDto mapToPostPromoResponseDto(Post post, Seller seller){
+        return new PostPromoResponseDto(
+                seller.getId(),
+                post.getDate().format(formatter),
+                mapToProductDto(post.getProduct()),
+                post.getCategory(),
+                post.getPrice(),
+                post.isHas_promo(),
+                post.getDiscount());
+    }
+
+    public static PostPromoListDto mapToPostPromoListDto(List<PostPromoResponseDto> postPromoList, Seller seller){
+        return new PostPromoListDto(seller.getId(), seller.getName(), postPromoList);
     }
 
 }

@@ -4,10 +4,9 @@ import org.bootcamp.javazoo.dto.PostPromoDto;
 import org.bootcamp.javazoo.dto.PostResponseDto;
 import org.bootcamp.javazoo.dto.response.CountPromoDto;
 import org.bootcamp.javazoo.dto.response.MessageDto;
-import org.bootcamp.javazoo.dto.ProductDto;
+import org.bootcamp.javazoo.dto.response.PostPromoListDto;
 import org.bootcamp.javazoo.dto.response.PostsFollowedUserDto;
 import org.bootcamp.javazoo.entity.Post;
-import org.bootcamp.javazoo.entity.Product;
 
 import java.util.List;
 
@@ -23,4 +22,6 @@ public interface IPostService {
     CountPromoDto getCountPromoPost(Integer userId);
 
     List<Post> getPostsBySellerId(Integer sellerId);
+
+    PostPromoListDto getPromoPostsBySeller(Integer sellerId, String order);
 }

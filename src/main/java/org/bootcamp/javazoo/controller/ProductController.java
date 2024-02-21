@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.bootcamp.javazoo.dto.PostDto;
 import org.bootcamp.javazoo.dto.PostPromoDto;
 import org.bootcamp.javazoo.dto.response.CountPromoDto;
+import org.bootcamp.javazoo.dto.response.PostPromoListDto;
 import org.bootcamp.javazoo.exception.BadRequestException;
 import org.bootcamp.javazoo.dto.response.PostsFollowedUserDto;
 import org.bootcamp.javazoo.service.interfaces.IPostService;
@@ -47,6 +48,13 @@ public class ProductController {
     public ResponseEntity<CountPromoDto> getCountPromoPost(@RequestParam Integer user_id){
         return ResponseEntity.ok().body(postService.getCountPromoPost(user_id));
     }
+
+    @GetMapping("/promo-post/list")
+    public ResponseEntity<PostPromoListDto> getPromoPostsBySeller(@RequestParam Integer user_id,
+                                                                  @RequestParam(required = false) String order){
+        return ResponseEntity.ok().body(postService.getPromoPostsBySeller(user_id, order));
+    }
+
 
 
 }

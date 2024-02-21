@@ -2,15 +2,14 @@ package org.bootcamp.javazoo.service.impl;
 
 import org.bootcamp.javazoo.dto.PostPromoDto;
 import org.bootcamp.javazoo.dto.PostResponseDto;
-import org.bootcamp.javazoo.dto.response.CountPromoDto;
-import org.bootcamp.javazoo.dto.response.MessageDto;
+import org.bootcamp.javazoo.dto.response.*;
+import org.bootcamp.javazoo.entity.Product;
 import org.bootcamp.javazoo.entity.Seller;
 import org.bootcamp.javazoo.exception.NotFoundException;
 import org.bootcamp.javazoo.helper.Mapper;
 import org.bootcamp.javazoo.service.interfaces.ISellerService;
 import org.springframework.stereotype.Service;
 import org.bootcamp.javazoo.dto.PostDto;
-import org.bootcamp.javazoo.dto.response.PostsFollowedUserDto;
 import org.bootcamp.javazoo.entity.Post;
 import org.bootcamp.javazoo.exception.BadRequestException;
 import org.bootcamp.javazoo.repository.interfaces.IPostRepository;
@@ -122,10 +121,31 @@ public class PostServiceImpl implements IPostService {
         return postList;
     }
 
+    @Override
+    public PostPromoListDto getPromoPostsBySeller(Integer sellerId, String order){
+        List<Post> posts = getPostsBySellerId(sellerId);
+        Seller seller = sellerService.getById(sellerId);
+        List<PostPromoResponseDto> postResponseDtos = posts.stream()
+                .filter(Post::isHas_promo)
+                .map(post -> Mapper.mapToPostPromoResponseDto(post,seller)).toList();
+        if(!(order == null)){
+            postResponseDtos = sortPostPromoDto(postResponseDtos, order);
+        }
+        return Mapper.mapToPostPromoListDto(postResponseDtos, seller);
+    }
 
+    public List<PostPromoResponseDto> sortPostPromoDto(List<PostPromoResponseDto> postPromoResponseDtos, String orderParam){
+        if(orderParam.equals("name_asc")){
+            return postPromoResponseDtos.stream()
+                    .sorted(Comparator.comparing(postPr -> postPr.getProduct().getProduct_name()))
+                    .collect(Collectors.toList());
 
-
-
-
-
+        } else if (orderParam.equals("name_desc")) {
+            return postPromoResponseDtos.stream()
+                    .sorted(Comparator.comparing(postPr -> postPr.getProduct().getProduct_name(), Comparator.reverseOrder()))
+                    .collect(Collectors.toList());
+        } else {
+            throw new BadRequestException("'order' parameter in endpoint path is invalid");
+        }
+    }
 }
