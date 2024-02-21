@@ -1,5 +1,6 @@
 package org.bootcamp.javazoo.service.interfaces;
 import org.bootcamp.javazoo.dto.PostDto;
+import org.bootcamp.javazoo.dto.PostPromoDto;
 import org.bootcamp.javazoo.dto.PostResponseDto;
 import org.bootcamp.javazoo.dto.response.MessageDto;
 import org.bootcamp.javazoo.dto.ProductDto;
@@ -16,4 +17,6 @@ public interface IPostService {
     PostsFollowedUserDto getPostsBySellerOfUser(int userId, String order);
 
     MessageDto addNewPost(PostDto postDto);
+
+    MessageDto addNewPostPromo(PostPromoDto postPromoDto);
 }

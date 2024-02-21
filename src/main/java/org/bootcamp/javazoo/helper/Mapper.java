@@ -1,9 +1,6 @@
 package org.bootcamp.javazoo.helper;
 
-import org.bootcamp.javazoo.dto.PostDto;
-import org.bootcamp.javazoo.dto.PostResponseDto;
-import org.bootcamp.javazoo.dto.ProductDto;
-import org.bootcamp.javazoo.dto.UserDto;
+import org.bootcamp.javazoo.dto.*;
 import org.bootcamp.javazoo.dto.response.PostsFollowedUserDto;
 import org.bootcamp.javazoo.entity.Post;
 import org.bootcamp.javazoo.entity.Product;
@@ -18,8 +15,9 @@ public class Mapper {
         return new UserDto(user.getId(), user.getName());
     }
 
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
     public static Post convertDtoToPost(PostDto postDto){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return new Post(
                 postDto.getUser_id(),
                 LocalDate.parse(postDto.getDate(), formatter),
@@ -58,6 +56,18 @@ public class Mapper {
                 productToMap.getBrand(),
                 productToMap.getColor(),
                 productToMap.getNotes());
+    }
+
+    public static Post mapPromoDtoToPost(PostPromoDto postPromoDto){
+        return new Post(
+                postPromoDto.getUser_id(),
+                LocalDate.parse(postPromoDto.getDate(), formatter),
+                convertDtoToProduct(postPromoDto.getProduct()),
+                postPromoDto.getCategory(),
+                postPromoDto.getPrice(),
+                postPromoDto.isHas_promo(),
+                postPromoDto.getDiscount()
+        );
     }
 
 }

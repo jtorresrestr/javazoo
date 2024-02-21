@@ -1,5 +1,6 @@
 package org.bootcamp.javazoo.service.impl;
 
+import org.bootcamp.javazoo.dto.PostPromoDto;
 import org.bootcamp.javazoo.dto.PostResponseDto;
 import org.bootcamp.javazoo.dto.response.MessageDto;
 import org.bootcamp.javazoo.entity.Seller;
@@ -88,4 +89,17 @@ public class PostServiceImpl implements IPostService {
         seller.addPost(post.getId());
         return new MessageDto("The publication was created successfully");
     }
+
+    @Override
+    public MessageDto addNewPostPromo(PostPromoDto postPromoDto){
+        Seller seller = sellerService.getById(postPromoDto.getUser_id());
+        if(seller == null) {
+            throw new NotFoundException("Seller not found");
+        }
+        Post post = Mapper.mapPromoDtoToPost(postPromoDto);
+        postRepository.addNewPost(post);
+        seller.addPost(post.getId());
+        return new MessageDto("The publication was created successfully");
+    }
+
 }
