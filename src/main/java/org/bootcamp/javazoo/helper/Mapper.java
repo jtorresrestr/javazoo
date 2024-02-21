@@ -14,12 +14,11 @@ public class Mapper {
     public static UserDto convertUserToUserDto(User user) {
         return new UserDto(user.getId(), user.getName());
     }
-
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    public static Post convertDtoToPost(PostDto postDto){
+    public static Post convertDtoToPost(PostDto postDto, Integer postId){
         return new Post(
-                postDto.getUser_id(),
+                postId,
                 LocalDate.parse(postDto.getDate(), formatter),
                 convertDtoToProduct(postDto.getProduct()),
                 postDto.getCategory(),
@@ -58,9 +57,9 @@ public class Mapper {
                 productToMap.getNotes());
     }
 
-    public static Post mapPromoDtoToPost(PostPromoDto postPromoDto){
+    public static Post mapPromoDtoToPost(PostPromoDto postPromoDto, Integer postId){
         return new Post(
-                postPromoDto.getUser_id(),
+                postId,
                 LocalDate.parse(postPromoDto.getDate(), formatter),
                 convertDtoToProduct(postPromoDto.getProduct()),
                 postPromoDto.getCategory(),

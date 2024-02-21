@@ -12,7 +12,6 @@ import org.bootcamp.javazoo.entity.Product;
 import java.util.List;
 
 public interface IPostService {
-
     List<PostResponseDto> getPostsBySeller(int userId, String order);
 
     PostsFollowedUserDto getPostsBySellerOfUser(int userId, String order);

@@ -5,6 +5,7 @@ import org.bootcamp.javazoo.entity.Post;
 import java.util.List;
 
 public interface IPostRepository {
+    Integer getCounter();
     List<Post> getAll();
 
     void addNewPost(Post post);

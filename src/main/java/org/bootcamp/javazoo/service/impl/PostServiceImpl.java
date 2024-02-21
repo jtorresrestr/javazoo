@@ -27,9 +27,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class PostServiceImpl implements IPostService {
-    IUserService userService;
-    IPostRepository postRepository;
-    ISellerService sellerService;
+    private final IUserService userService;
+    private final IPostRepository postRepository;
+    private final ISellerService sellerService;
 
     public PostServiceImpl(IUserService userService, IPostRepository postRepository, ISellerService sellerService) {
         this.userService = userService;
@@ -85,8 +85,7 @@ public class PostServiceImpl implements IPostService {
         if(seller == null) {
             throw new NotFoundException("Seller not found");
         }
-
-        Post post = Mapper.convertDtoToPost(postDto);
+        Post post = Mapper.convertDtoToPost(postDto, postRepository.getCounter());
         postRepository.addNewPost(post);
         seller.addPost(post.getId());
         return new MessageDto("The publication was created successfully");
@@ -98,7 +97,7 @@ public class PostServiceImpl implements IPostService {
         if(seller == null) {
             throw new NotFoundException("Seller not found");
         }
-        Post post = Mapper.mapPromoDtoToPost(postPromoDto);
+        Post post = Mapper.mapPromoDtoToPost(postPromoDto, postRepository.getCounter());
         postRepository.addNewPost(post);
         seller.addPost(post.getId());
         return new MessageDto("The publication was created successfully");
