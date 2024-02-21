@@ -1,7 +1,9 @@
 package org.bootcamp.javazoo.service.impl;
 
 import org.bootcamp.javazoo.dto.PostResponseDto;
+import org.bootcamp.javazoo.dto.response.CountPromoDto;
 import org.bootcamp.javazoo.dto.response.MessageDto;
+import org.bootcamp.javazoo.dto.response.PromoPostListDto;
 import org.bootcamp.javazoo.entity.Seller;
 import org.bootcamp.javazoo.exception.NotFoundException;
 import org.bootcamp.javazoo.helper.Mapper;
@@ -21,6 +23,8 @@ import org.bootcamp.javazoo.service.interfaces.IUserService;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;
+
+import static org.bootcamp.javazoo.helper.Mapper.mapToCountPromoDto;
 
 @Service
 public class PostServiceImpl implements IPostService {
@@ -79,12 +83,48 @@ public class PostServiceImpl implements IPostService {
     @Override
     public MessageDto addNewPost(PostDto postDto) {
         Seller seller = sellerService.getById(postDto.getUser_id());
-        if(seller == null) {
-            throw new NotFoundException("Seller not found");
-        }
         Post post = Mapper.convertDtoToPost(postDto, postRepository.getCounter());
         postRepository.addNewPost(post);
         seller.addPost(post.getId());
         return new MessageDto("The publication was created successfully");
+    }
+    @Override
+    public CountPromoDto countPromoPosts(String userId) {
+        Seller seller = sellerService.getById(Integer.parseInt(userId));
+        Integer count = seller.getPosts().stream()
+                .map(postRepository::getById)
+                .filter(Post::getHasPromo)
+                .toList().size();
+        return mapToCountPromoDto(seller, count);
+    }
+    @Override
+    public PromoPostListDto getPromoPostList(String userId, String order) {
+        Seller seller = sellerService.getById(Integer.parseInt(userId));
+        List<PostResponseDto> posts;
+        if(order == null) {
+            posts = seller.getPosts().stream()
+                    .map(postRepository::getById)
+                    .filter(Post::getHasPromo)
+                    .map(p -> Mapper.mapToPostDto(p, seller.getId()))
+                    .toList();
+        } else {
+            posts = sortPostByProductName(seller.getPosts().stream().map(postRepository::getById).filter(Post::getHasPromo).toList(), order).stream()
+                        .map(p -> Mapper.mapToPostDto(p, seller.getId()))
+                        .toList();
+        }
+        return Mapper.mapToPromoPostListDto(posts, seller);
+    }
+    private List<Post> sortPostByProductName(List<Post> posts, String order){
+        if(order.equals("name_asc")){
+            return posts.stream()
+                    .sorted((post1, post2) -> post1.getProduct().getName().compareTo(post2.getProduct().getName()))
+                    .collect(Collectors.toList());
+        } else if (order.equals("name_desc")) {
+            return posts.stream()
+                    .sorted((post1, post2) -> post2.getProduct().getName().compareTo(post1.getProduct().getName()))
+                    .toList();
+        } else {
+            throw new BadRequestException("'order' parameter in endpoint path is invalid");
+        }
     }
 }

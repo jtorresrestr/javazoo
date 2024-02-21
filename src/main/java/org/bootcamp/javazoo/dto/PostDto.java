@@ -1,9 +1,8 @@
 package org.bootcamp.javazoo.dto;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,4 +29,10 @@ public class PostDto {
     @NotNull
     @Min(0)
     private Double price;
+
+    private Boolean has_promo;
+
+    @Min(0)
+    @Max(1)
+    private Double discount;
 }

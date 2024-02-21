@@ -1,9 +1,11 @@
 package org.bootcamp.javazoo.service.interfaces;
 import org.bootcamp.javazoo.dto.PostDto;
 import org.bootcamp.javazoo.dto.PostResponseDto;
+import org.bootcamp.javazoo.dto.response.CountPromoDto;
 import org.bootcamp.javazoo.dto.response.MessageDto;
 import org.bootcamp.javazoo.dto.ProductDto;
 import org.bootcamp.javazoo.dto.response.PostsFollowedUserDto;
+import org.bootcamp.javazoo.dto.response.PromoPostListDto;
 import org.bootcamp.javazoo.entity.Post;
 import org.bootcamp.javazoo.entity.Product;
 
@@ -15,4 +17,6 @@ public interface IPostService {
     PostsFollowedUserDto getPostsBySellerOfUser(int userId, String order);
 
     MessageDto addNewPost(PostDto postDto);
+    CountPromoDto countPromoPosts(String userId);
+    PromoPostListDto getPromoPostList(String userId, String order);
 }

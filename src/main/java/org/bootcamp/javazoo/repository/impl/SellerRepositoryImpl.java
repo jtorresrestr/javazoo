@@ -23,6 +23,8 @@ public class SellerRepositoryImpl implements ISellerRepository {
         posts.add(1);
         posts.add(2);
         posts.add(3);
+        posts.add(4);
+        posts.add(5);
         Seller seller1 = new Seller(1, "Seller 1", followers, posts);
         Seller seller2 = new Seller(2, "Seller 2");
         Seller seller3 = new Seller(3, "Seller 3");
