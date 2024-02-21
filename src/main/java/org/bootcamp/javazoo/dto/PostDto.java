@@ -30,4 +30,9 @@ public class PostDto {
     @NotNull
     @Min(0)
     private Double price;
+
+    private Boolean has_promo;
+
+    @Min(0)
+    private Double discount;
 }

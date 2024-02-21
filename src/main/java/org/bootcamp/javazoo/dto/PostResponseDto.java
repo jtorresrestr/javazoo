@@ -35,4 +35,11 @@ public class PostResponseDto {
     @Min(0)
     private Double price;
 
+    @NotNull
+    private boolean has_promo;
+
+    @NotNull
+    @Min(0)
+    private Double discount;
+
 }

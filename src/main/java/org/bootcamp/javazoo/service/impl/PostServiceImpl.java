@@ -1,6 +1,8 @@
 package org.bootcamp.javazoo.service.impl;
 
 import org.bootcamp.javazoo.dto.PostResponseDto;
+import org.bootcamp.javazoo.dto.response.CountPromoPostDto;
+import org.bootcamp.javazoo.dto.response.CountPromoPostListDto;
 import org.bootcamp.javazoo.dto.response.MessageDto;
 import org.bootcamp.javazoo.entity.Seller;
 import org.bootcamp.javazoo.exception.NotFoundException;
@@ -82,9 +84,29 @@ public class PostServiceImpl implements IPostService {
         if(seller == null) {
             throw new NotFoundException("Seller not found");
         }
+        if (postDto.getDiscount() == null || postDto.getHas_promo() == null){
+            postDto.setHas_promo(false);
+            postDto.setDiscount(0.0);
+        }
         Post post = Mapper.convertDtoToPost(postDto, postRepository.getCounter());
         postRepository.addNewPost(post);
         seller.addPost(post.getId());
         return new MessageDto("The publication was created successfully");
     }
+
+    @Override
+    public CountPromoPostDto getPromoCountByUser(Integer user_id) {
+        Seller seller = sellerService.getById(user_id);
+        Integer countPromos = (int) seller.getPosts().stream().map(postRepository::getById).filter(Post::getHas_promo).count();
+        return new CountPromoPostDto(seller.getId(), seller.getName(), countPromos);
+    }
+
+    @Override
+    public CountPromoPostListDto getPromoListByUser(Integer user_id) {
+        Seller seller = sellerService.getById(user_id);
+        List<PostResponseDto> listPromos = seller.getPosts().stream().map(postRepository::getById).filter(Post::getHas_promo).map(post -> Mapper.mapToPostDto(post, seller.getId())).toList();
+        return new CountPromoPostListDto(seller.getId(), seller.getName(), listPromos);
+    }
+
+
 }

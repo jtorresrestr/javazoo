@@ -25,11 +25,21 @@ public class ProductController {
         return ResponseEntity.ok(postService.getPostsBySellerOfUser(userId, order));
     }
 
-    @PostMapping("/post")
+    @PostMapping({"/post", "/promo-post"})
     public ResponseEntity<?> addNewPost(@Valid @RequestBody PostDto postDto, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new BadRequestException("Invalid fields");
         }
-        return new ResponseEntity<>(postService.addNewPost(postDto) , HttpStatus.CREATED);
+        return new ResponseEntity<>(postService.addNewPost(postDto), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/promo-post/count")
+    public ResponseEntity<?> getPromoCount(@RequestParam Integer user_id){
+        return ResponseEntity.ok(postService.getPromoCountByUser(user_id));
+    }
+
+    @GetMapping("/promo-post/list")
+    public ResponseEntity<?> getPromoList(@RequestParam Integer user_id){
+        return ResponseEntity.ok(postService.getPromoListByUser(user_id));
     }
 }

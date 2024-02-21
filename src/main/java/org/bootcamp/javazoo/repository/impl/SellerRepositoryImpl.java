@@ -1,16 +1,12 @@
 package org.bootcamp.javazoo.repository.impl;
 
-import org.bootcamp.javazoo.entity.Post;
-import org.bootcamp.javazoo.entity.Product;
 import org.bootcamp.javazoo.entity.Seller;
-import org.bootcamp.javazoo.entity.User;
 import org.bootcamp.javazoo.repository.interfaces.ISellerRepository;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Array;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Repository
 public class SellerRepositoryImpl implements ISellerRepository {
@@ -35,4 +31,11 @@ public class SellerRepositoryImpl implements ISellerRepository {
     public Seller findById(Integer id) {
         return sellers.stream().filter(seller -> seller.getId().equals(id)).findFirst().orElse(null);
     }
+
+    @Override
+    public Stream<Seller> getCountPromos(Integer user_id) {
+        return sellers.stream().filter(seller -> seller.getId().equals(user_id));
+    }
+
+
 }

@@ -25,7 +25,9 @@ public class Mapper {
                 LocalDate.parse(postDto.getDate(), formatter),
                 convertDtoToProduct(postDto.getProduct()),
                 postDto.getCategory(),
-                postDto.getPrice()
+                postDto.getPrice(),
+                postDto.getHas_promo(),
+                postDto.getDiscount()
         );
     }
     public static Product convertDtoToProduct(ProductDto productDto) {
@@ -46,7 +48,10 @@ public class Mapper {
                 postToMap.getDate().format(formatter),
                 mapToProductDto(postToMap.getProduct()),
                 postToMap.getCategory(),
-                postToMap.getPrice());
+                postToMap.getPrice(),
+                postToMap.getHas_promo(),
+                postToMap.getDiscount()
+        );
     }
     public static PostsFollowedUserDto mapToPostsFollowedUserDto(List<PostResponseDto> postDtos, int userId){
         return new PostsFollowedUserDto(userId, postDtos);
