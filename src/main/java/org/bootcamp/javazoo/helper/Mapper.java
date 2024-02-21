@@ -56,10 +56,11 @@ public class Mapper {
         );
     }
     public static PostResponseDto mapToPostDto(Post postToMap, Integer sellerId){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return new PostResponseDto(
                 sellerId,
                 postToMap.getId(),
-                postToMap.getDate().toString(),
+                postToMap.getDate().format(formatter),
                 mapToProductDto(postToMap.getProduct()),
                 postToMap.getCategory(),
                 postToMap.getPrice(),
